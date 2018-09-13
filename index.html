@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css">
+<link rel="stylesheet" href="style.css">
+
+<title>Product order</title>
+</head>
+<body>
+
+        <section class="h-100">
+                <header class="container h-100">
+                  <div class="d-flex align-items-center justify-content-center h-100">
+                    <div class="d-flex flex-column">
+                            <div class="card col-md-6 align-self-center mt-5">
+                                    <img class="card-img-top" src="https://i.ytimg.com/vi/pQNApnQK4Xo/maxresdefault.jpg" alt="Card image cap">
+                                    <div class="card-body">
+                                      <p class="card-text">Bánh Mì a Vietnamese sandwich made using a baguette or long roll</p>
+                                      <div class="text-center">
+                                            <button class="btn btn-success text-center" id="order">Order now</button>
+                                      </div>
+                                      <div class="status mt-5" id="result">
+                                         <!-- <p class="alert alert-primary"> ok </p> -->
+                                      </div>
+                                    </div>
+                        </div>
+                    </div>
+                  </div>
+                </header>
+              </section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.21.5.min.js"></script>
+
+<script>
+$(function(){
+    pubnub = new PubNub({
+        publishKey : 'pub-c-198c672b-17e7-4a16-983f-0577245a411d',
+        subscribeKey : 'sub-c-f9f6933e-b403-11e8-b312-ae7e016e9656'
+    })
+    
+    // function publishSampleMessage() {
+        
+    //     var publishConfig = {
+    //         channel : "awesomechannel",
+    //         message: { 
+    //             title: "Hello",
+    //             description: "hello world!"
+    //         }
+    //     }
+    //     pubnub.publish(publishConfig, function(status, response) {
+    //         console.log(status, response);
+    //     })
+    // }
+       
+    pubnub.addListener({
+        status: function(statusEvent) {
+            if (statusEvent.category === "PNConnectedCategory") {
+                // publishSampleMessage();
+                console.log('[+] connected !')
+            }
+        },
+        message: function(msg) {
+            console.log(msg.message.title)
+            if(msg.message.status === "Ok")
+            {
+                $("#result").html(`<p class="alert alert-success text-center">${msg.message.title}</p>`)
+            }
+            if(msg.message.status === "No"){
+                $("#result").html(`<p class="alert alert-danger text-center"> ${msg.message.title}</p>`)
+            }
+            
+        },
+        presence: function(presenceEvent) {
+            // handle presence
+        }
+    })      
+    console.log("Subscribing..");
+    pubnub.subscribe({
+        channels: ['awesomechannel'] 
+    });
+
+
+$("#order").click(function (e) { 
+    publishConfig = {
+        channel : "awesomechannel",
+            message: { 
+                title: "Order",
+                description: "Order 1 Banh Mi"
+            }
+    }
+    pubnub.publish(publishConfig, function(status, response) {
+            console.log(status, response);
+            if(status)
+            {
+                $("#result").html(`<p class="alert alert-primary text-center">Pending  ....</p>`)
+            }
+        })
+        e.preventDefault();
+        
+    });
+});
+</script>
+</body>
+</html>
