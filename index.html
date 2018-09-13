@@ -73,7 +73,7 @@ $(function(){
             console.log(msg.message.title)
             if(msg.message.status === "Ok")
             {
-                $("#result").html(`<p class="alert alert-success text-center">${msg.message.title}</p>`)
+                $("#result").html('<p class="alert alert-success text-center">Your order has been accepted !</p>')
             }
             if(msg.message.status === "No"){
                 $("#result").html(`<p class="alert alert-danger text-center"> ${msg.message.title}</p>`)
