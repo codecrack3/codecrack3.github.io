@@ -20,9 +20,12 @@
                                     <img class="card-img-top" src="https://i.ytimg.com/vi/pQNApnQK4Xo/maxresdefault.jpg" alt="Card image cap">
                                     <div class="card-body">
                                       <p class="card-text">Bánh Mì a Vietnamese sandwich made using a baguette or long roll</p>
-                                      <div class="text-center">
-                                            <button class="btn btn-success text-center" id="order">Order now</button>
-                                      </div>
+                                            
+                                     <div class="text-center">
+    <p class="h5">Price: <span class="badge badge-warning">1$</span></p>
+
+                                            
+                                      <button class="btn btn-success pull-right" id="order">Order now</button></div>
                                       <div class="status mt-5" id="result">
                                          <!-- <p class="alert alert-primary"> ok </p> -->
                                       </div>
@@ -92,7 +95,7 @@ $("#order").click(function (e) {
         channel : "awesomechannel",
             message: { 
                 title: "Order",
-                description: "Order 1 Banh Mi"
+                description: "1 Banh Mi 1$"
             }
     }
     pubnub.publish(publishConfig, function(status, response) {
